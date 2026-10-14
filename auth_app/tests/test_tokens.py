@@ -5,6 +5,7 @@ from .base import AuthenticationApiTestCase
 
 class TokenTests(AuthenticationApiTestCase):
     """Test token refresh, logout and blacklisting."""
+
     def test_refresh_uses_refresh_cookie(self):
         """A valid refresh cookie creates a new access cookie."""
         self.client.post("/api/login/", self.credentials, format="json")

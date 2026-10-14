@@ -57,17 +57,21 @@ class LogoutView(APIView):
 
 
 class RefreshTokenView(TokenRefreshView):
-    """Create a new access token from the HttpOnly refresh cookie."""
-
     permission_classes = [AllowAny]
 
+    def validate_refresh_token(self, refresh_token):
+        serializer = self.get_serializer(data={"refresh": refresh_token})
+        serializer.is_valid(raise_exception=True)
+        return serializer.validated_data
+
     def post(self, request, *args, **kwargs):
-        """Refresh access without exposing the refresh token."""
         refresh_token = request.COOKIES.get("refresh_token")
         if not refresh_token:
             return Response({"detail": "Refresh token not found."}, status=401)
-        serializer = self.get_serializer(data={"refresh": refresh_token})
-        serializer.is_valid(raise_exception=True)
+        try:
+            tokens = self.validate_refresh_token(refresh_token)
+        except TokenError:
+            return Response({"detail": "Refresh token is invalid."}, status=401)
         response = Response({"detail": "Token refreshed."})
-        set_auth_cookies(response, serializer.validated_data)
+        set_auth_cookies(response, tokens)
         return response
