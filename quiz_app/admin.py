@@ -1,3 +1,5 @@
 from django.contrib import admin
+from .models import QuizforQuizly, QuestionforQuizly
 
-# Register your models here.
+admin.site.register(QuizforQuizly)
+admin.site.register(QuestionforQuizly)
