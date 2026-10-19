@@ -1,12 +1,23 @@
 """Tests for user registration."""
 
+from django.contrib.auth import get_user_model
 from rest_framework import status
+from rest_framework.test import APITestCase
 
-from .base import AuthenticationApiTestCase, User
+
+User = get_user_model()
 
 
-class RegistrationTests(AuthenticationApiTestCase):
+class RegistrationTests(APITestCase):
     """Verify registration validation and user creation."""
+
+    def setUp(self):
+        """Create an existing user for duplicate-data tests."""
+        self.user = User.objects.create_user(
+            username="quizzer",
+            email="quizzer@example.com",
+            password="StrongPass123!",
+        )
 
     def test_registration_creates_user_with_hashed_password(self):
         """Registration creates a usable account without exposing passwords."""

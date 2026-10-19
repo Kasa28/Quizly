@@ -1,12 +1,22 @@
 """Tests for user login."""
 
+from django.contrib.auth import get_user_model
 from rest_framework import status
+from rest_framework.test import APITestCase
 
-from .base import AuthenticationApiTestCase
+
+User = get_user_model()
 
 
-class LoginTests(AuthenticationApiTestCase):
+class LoginTests(APITestCase):
     """Verify successful and failed login attempts."""
+
+    def setUp(self):
+        """Create a user and reusable login credentials."""
+        self.credentials = {"username": "quizer", "password": "QuizerPass123!"}
+        self.user = User.objects.create_user(
+            email="quizer@gmail.com", **self.credentials
+        )
 
     def test_login_sets_httponly_token_cookies(self):
         """A valid login stores both tokens without returning their values."""
@@ -19,7 +29,7 @@ class LoginTests(AuthenticationApiTestCase):
 
     def test_login_uses_generic_error_message(self):
         """Invalid credentials do not reveal which value was incorrect."""
-        payload = {"username": "quizzer", "password": "wrong"}
+        payload = {"username": "quizer", "password": "wrong"}
         response = self.client.post("/api/login/", payload, format="json")
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
         self.assertEqual(response.data["detail"], "Username or password is incorrect.")

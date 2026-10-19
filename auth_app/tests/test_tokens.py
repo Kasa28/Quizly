@@ -1,10 +1,23 @@
 """Tests for refreshing and revoking JWT cookies."""
-from rest_framework import status
-from rest_framework_simplejwt.token_blacklist.models import BlacklistedToken
-from .base import AuthenticationApiTestCase
 
-class TokenTests(AuthenticationApiTestCase):
+from django.contrib.auth import get_user_model
+from rest_framework import status
+from rest_framework.test import APITestCase
+from rest_framework_simplejwt.token_blacklist.models import BlacklistedToken
+
+
+User = get_user_model()
+
+
+class TokenTests(APITestCase):
     """Test token refresh, logout and blacklisting."""
+
+    def setUp(self):
+        """Create a user and reusable login credentials."""
+        self.credentials = {"username": "quizer", "password": "QuizerPass123!"}
+        self.user = User.objects.create_user(
+            email="quizer@gmail.com", **self.credentials
+        )
 
     def test_refresh_uses_refresh_cookie(self):
         """A valid refresh cookie creates a new access cookie."""
