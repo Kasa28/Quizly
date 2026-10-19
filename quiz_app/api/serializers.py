@@ -1,6 +1,10 @@
 from rest_framework import serializers
 from quiz_app.models import QuestionforQuizly, QuizforQuizly
 
+
+class QuizGenerationSerializer(serializers.Serializer):
+    url = serializers.URLField()
+
 class QuestionSerializer(serializers.ModelSerializer):
 
     class Meta:
