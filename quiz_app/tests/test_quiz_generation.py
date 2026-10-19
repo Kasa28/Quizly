@@ -15,7 +15,7 @@ class QuizGenerationTests(APITestCase):
 
     def setUp(self):
         self.user = User.objects.create_user(username="quizzer")
-        self.url = reverse("quiz-generate")
+        self.url = reverse("quiz-list")
         self.video_url = "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
 
     def create_question(self, number):

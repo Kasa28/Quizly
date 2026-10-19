@@ -2,14 +2,19 @@ from rest_framework import status
 from rest_framework.generics import ListAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.views import APIView
 from quiz_app.models import QuizforQuizly
 from quiz_app.services.quiz_generation import generate_quiz_from_youtube
 from quiz_app.services.quiz_storage import save_generated_quiz
 from .serializers import (QuizDetailSerializer, QuizGenerationSerializer, QuizListSerializer)
 
-class QuizGenerationView(APIView):
+class QuizListView(ListAPIView):
     permission_classes = [IsAuthenticated]
+    serializer_class = QuizListSerializer
+
+    def get_queryset(self):
+        return QuizforQuizly.objects.filter(
+            user=self.request.user,
+        ).order_by("-created_at")
 
     def post(self, request):
         serializer = QuizGenerationSerializer(data=request.data)
@@ -21,15 +26,6 @@ class QuizGenerationView(APIView):
             QuizDetailSerializer(quiz).data,
             status=status.HTTP_201_CREATED,
         )
-
-class QuizListView(ListAPIView):
-    permission_classes = [IsAuthenticated]
-    serializer_class = QuizListSerializer
-
-    def get_queryset(self):
-        return QuizforQuizly.objects.filter(
-            user=self.request.user,
-        ).order_by("-created_at")
 
 
 class QuizDetailView(RetrieveUpdateDestroyAPIView):
