@@ -47,7 +47,7 @@ ffmpeg -version
 Clone the repository and open the project directory:
 
 ```powershell
-git clone <REPOSITORY-URL>
+git clone https://github.com/Kasa28/Quizly.git
 cd Quizly
 ```
 
