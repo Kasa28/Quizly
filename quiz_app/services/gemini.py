@@ -1,3 +1,5 @@
+"""Generate structured quiz data with the Gemini API."""
+
 import json
 from google import genai
 
@@ -22,6 +24,7 @@ Transcript:
 
 
 def generate_quiz_data(transcript):
+    """Turn a video transcript into structured quiz data."""
     client = genai.Client()
     response = client.models.generate_content(
         model="gemini-3-flash-preview",
