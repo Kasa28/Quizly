@@ -1,5 +1,4 @@
 """Authentication API views."""
-
 from rest_framework import generics, status
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
@@ -7,11 +6,8 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-
 from auth_app.cookies import clear_auth_cookies, set_auth_cookies
-
 from .serializers import LoginSerializer, RegistrationSerializer
-
 
 class RegistrationView(generics.CreateAPIView):
     """Create a new user account."""
@@ -39,7 +35,6 @@ class LoginCookieView(TokenObtainPairView):
 
 class LogoutView(APIView):
     """Blacklist the refresh token and remove both JWT cookies."""
-
     permission_classes = [IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
@@ -57,14 +52,18 @@ class LogoutView(APIView):
 
 
 class RefreshTokenView(TokenRefreshView):
+    """Refresh JWT access cookies using the refresh cookie."""
+
     permission_classes = [AllowAny]
 
     def validate_refresh_token(self, refresh_token):
+        """Validate a refresh token and return new token data."""
         serializer = self.get_serializer(data={"refresh": refresh_token})
         serializer.is_valid(raise_exception=True)
         return serializer.validated_data
 
     def post(self, request, *args, **kwargs):
+        """Set refreshed authentication cookies for a valid session."""
         refresh_token = request.COOKIES.get("refresh_token")
         if not refresh_token:
             return Response({"detail": "Refresh token not found."}, status=401)

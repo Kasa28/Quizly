@@ -1,6 +1,9 @@
+"""Helpers for creating and removing JWT authentication cookies."""
+
 from django.conf import settings
 
 def set_token_cookie(response, key, token):
+    """Attach one secure HttpOnly token cookie to a response."""
     response.set_cookie(
         key=key,
         value=token,
@@ -11,11 +14,13 @@ def set_token_cookie(response, key, token):
 
 
 def set_auth_cookies(response, tokens):
+    """Attach available access and refresh tokens to a response."""
     set_token_cookie(response, "access_token", tokens["access"])
     if tokens.get("refresh"):
         set_token_cookie(response, "refresh_token", tokens["refresh"])
 
 
 def clear_auth_cookies(response):
+    """Remove access and refresh token cookies from a response."""
     response.delete_cookie("access_token", samesite="Lax")
     response.delete_cookie("refresh_token", samesite="Lax")
