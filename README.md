@@ -96,6 +96,18 @@ The API is available at `http://127.0.0.1:8000/api/`. The Django admin panel is 
 
 The frontend must be started with a local web server, such as the Live Server extension for Visual Studio Code, on port `5500`.
 
+## Frontend
+
+The frontend is maintained in a separate repository:
+
+[Quizly Frontend](https://github.com/Developer-Akademie-Backendkurs/project.Quizly)
+
+Clone the frontend separately:
+
+```powershell
+git clone https://github.com/Developer-Akademie-Backendkurs/project.Quizly.git
+```
+
 ## API Endpoints
 
 | Method | Endpoint | Description |
