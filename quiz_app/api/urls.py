@@ -1,3 +1,5 @@
+"""URL routes for quiz listing, generation, and management."""
+
 from django.urls import path
 from .views import QuizDetailView, QuizListView
 
